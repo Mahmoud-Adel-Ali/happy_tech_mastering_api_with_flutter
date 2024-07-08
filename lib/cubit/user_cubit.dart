@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:happy_tech_mastering_api_with_flutter/core/api/dio_consumer.dart';
 import 'package:happy_tech_mastering_api_with_flutter/cubit/user_state.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
 
 class UserCubit extends Cubit<UserState> {
-  UserCubit() : super(UserInitial());
+  final DioConsumer dioConsumer;
+  UserCubit(this.dioConsumer) : super(UserInitial());
   //Sign in Form key
   GlobalKey<FormState> signInFormKey = GlobalKey();
   //Sign in email
