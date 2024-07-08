@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:happy_tech_mastering_api_with_flutter/core/api/api_keys.dart';
 import 'package:happy_tech_mastering_api_with_flutter/core/api/dio_consumer.dart';
 import 'package:happy_tech_mastering_api_with_flutter/cubit/user_state.dart';
 import 'package:image_picker/image_picker.dart';
@@ -36,8 +37,8 @@ class UserCubit extends Cubit<UserState> {
       final Response response = await dio.post(
         'https://food-api-omega.vercel.app/api/v1/user/signin',
         data: {
-          'email': signInEmail.text,
-          'password': signInPassword.text,
+          ApiKeys.email: signInEmail.text,
+           ApiKeys.password: signInPassword.text,
         },
       );
       emit(SignInSuccess());
