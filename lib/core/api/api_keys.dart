@@ -5,4 +5,5 @@ class ApiKeys {
   static const email = 'email';
   static const token = 'token';
   static const id = 'id';
+  static const message = 'message';
 }

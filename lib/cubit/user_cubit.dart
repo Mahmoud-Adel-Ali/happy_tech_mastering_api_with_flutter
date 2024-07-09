@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:happy_tech_mastering_api_with_flutter/core/api/api_consumer.dart';
 import 'package:happy_tech_mastering_api_with_flutter/core/api/api_keys.dart';
-import 'package:happy_tech_mastering_api_with_flutter/core/api/dio_consumer.dart';
+import 'package:happy_tech_mastering_api_with_flutter/core/api/end_points.dart';
+import 'package:happy_tech_mastering_api_with_flutter/core/databases/cache/cache_helper.dart';
+import 'package:happy_tech_mastering_api_with_flutter/core/error/exception.dart';
+import 'package:happy_tech_mastering_api_with_flutter/core/models/sign_in_model.dart';
 import 'package:happy_tech_mastering_api_with_flutter/cubit/user_state.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:dio/dio.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class UserCubit extends Cubit<UserState> {
-  final DioConsumer dioConsumer;
-  UserCubit(this.dioConsumer) : super(UserInitial());
+  final ApiConsumer api;
+  UserCubit(this.api) : super(UserInitial());
   //Sign in Form key
   GlobalKey<FormState> signInFormKey = GlobalKey();
   //Sign in email
@@ -30,22 +34,27 @@ class UserCubit extends Cubit<UserState> {
   //Sign up confirm password
   TextEditingController confirmPassword = TextEditingController();
 
-  final Dio dio = Dio();
+  SignInModel? user;
   signIn() async {
-    emit(SignInLoading());
     try {
-      final Response response = await dio.post(
-        'https://food-api-omega.vercel.app/api/v1/user/signin',
+      emit(SignInLoading());
+      final response = await api.post(
+        EndPoints.signIn,
         data: {
           ApiKeys.email: signInEmail.text,
-           ApiKeys.password: signInPassword.text,
+          ApiKeys.password: signInPassword.text,
         },
       );
+      user = SignInModel.fromJson(response);
+      final Map<String, dynamic> decodedToken = JwtDecoder.decode(user!.token);
+      print(decodedToken[ApiKeys.id]);
+      // local storage
+      CacheHelper().setString(ApiKeys.id, decodedToken[ApiKeys.id]);
+      CacheHelper().setString(ApiKeys.token, user!.token);
+      //
       emit(SignInSuccess());
-      print(response);
-    } catch (e) {
-      print(e.toString);
-      emit(SignInFailure(e.toString()));
+    } on ServerException catch (e) {
+      emit(SignInFailure(message: e.errorModel.errorMessage));
     }
   }
 }

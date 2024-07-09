@@ -2,7 +2,7 @@ import 'package:happy_tech_mastering_api_with_flutter/core/api/api_keys.dart';
 
 class ErrorModel {
   final int status;
-  final String errorMessage;
+  final dynamic errorMessage;
 
   ErrorModel({required this.status, required this.errorMessage});
 
