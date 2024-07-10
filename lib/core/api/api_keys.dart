@@ -6,4 +6,9 @@ class ApiKeys {
   static const token = 'token';
   static const id = 'id';
   static const message = 'message';
+  static const name = 'name';
+  static const phone = 'phone';
+  static const confirmPassword = 'confirmPassword';
+  static const location = 'location';
+  static const profilePic = 'addrprofilePicess';
 }
