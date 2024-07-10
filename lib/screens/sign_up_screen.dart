@@ -82,7 +82,7 @@ class SignUpScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 22),
                     //!Sign Up Button
-                    state is SignUpSuccess
+                    state is SignUpLoading
                         ? const CircularProgressIndicator()
                         : CustomFormButton(
                             innerText: 'Signup',

@@ -10,5 +10,5 @@ class ApiKeys {
   static const phone = 'phone';
   static const confirmPassword = 'confirmPassword';
   static const location = 'location';
-  static const profilePic = 'addrprofilePicess';
+  static const profilePic = 'profilePic';
 }
