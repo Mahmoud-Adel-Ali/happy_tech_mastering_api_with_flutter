@@ -36,6 +36,15 @@ class UserCubit extends Cubit<UserState> {
   TextEditingController signUpPassword = TextEditingController();
   //Sign up confirm password
   TextEditingController confirmPassword = TextEditingController();
+  // update
+  GlobalKey<FormState> updateFormKey = GlobalKey();
+  //update name
+  TextEditingController? updateName = TextEditingController();
+  //update phone number
+  TextEditingController? updatePhoneNumber = TextEditingController();
+  //update email
+  TextEditingController? updateEmail = TextEditingController();
+
 
   getUserProfileData() async {
     try {
@@ -55,7 +64,7 @@ class UserCubit extends Cubit<UserState> {
     profilePic = image;
     emit(UpLoadProfilePicture());
   }
-
+  
   //Sign up
   signUp() async {
     try {
@@ -97,7 +106,6 @@ class UserCubit extends Cubit<UserState> {
       );
       user = SignInModel.fromJson(response);
       final Map<String, dynamic> decodedToken = JwtDecoder.decode(user!.token);
-      print(decodedToken[ApiKeys.id]);
       // local storage
       CacheHelper().setString(ApiKeys.id, decodedToken[ApiKeys.id]);
       CacheHelper().setString(ApiKeys.token, user!.token);
@@ -105,6 +113,30 @@ class UserCubit extends Cubit<UserState> {
       emit(SignInSuccess());
     } on ServerException catch (e) {
       emit(SignInFailure(message: e.errorModel.errorMessage));
+    }
+  }
+
+  //Sign up
+  updateUser(UserModel user) async {
+    try {
+      emit(UpdateLoading());
+      final response = await api.patch(
+        EndPoints.update,
+        isFormData: true,
+        data: {
+          ApiKeys.name: updateName != null ? updateName!.text : user.name,
+          ApiKeys.phone: updatePhoneNumber != null
+              ? updatePhoneNumber!.text
+              : user.phone,
+          ApiKeys.profilePic: profilePic != null
+              ? await uploadImageToApi(profilePic!)
+              : user.profilePic,
+        },
+      );
+      final signUpModel = SignUpModel.fromJson(response);
+      emit(UpdateSuccess(message: signUpModel.message));
+    } on ServerException catch (e) {
+      emit(UpdateFailure(message: e.errorModel.errorMessage));
     }
   }
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:happy_tech_mastering_api_with_flutter/cubit/user_cubit.dart';
 import 'package:happy_tech_mastering_api_with_flutter/cubit/user_state.dart';
 import 'package:happy_tech_mastering_api_with_flutter/screens/update_profile_screen.dart';
+import 'package:happy_tech_mastering_api_with_flutter/widgets/custom_form_button.dart';
 import 'package:happy_tech_mastering_api_with_flutter/widgets/show_snack_bar.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -15,9 +17,6 @@ class ProfileScreen extends StatelessWidget {
         listener: (context, state) {
           if (state is GetUserProfileDataFailure) {
             showSnackBar(context, message: state.message);
-          }
-          if (state is GetUserProfileDataSuccess) {
-            showSnackBar(context, message: state.userModel.name);
           }
         },
         builder: (context, state) {
@@ -63,31 +62,21 @@ class ProfileScreen extends StatelessWidget {
                               "Address : ${state.userModel.address['type']}"),
                           leading: const Icon(Icons.location_city),
                         ),
-                        const Expanded(child: SizedBox(height: 100)),
+                        const SizedBox(height: 100),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 28.0),
-                          child: MaterialButton(
+                          child: CustomFormButton(
                             onPressed: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const UpdateProfileScreen()));
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => UpdateProfileScreen(
+                                    user: state.userModel,
+                                  ),
+                                ),
+                              );
                             },
-                            shape: const StadiumBorder(
-                              side: BorderSide(
-                                color: Colors.black,
-                                width: 2.0,
-                                style: BorderStyle.solid,
-                              ),
-                            ),
-                            color: Colors.green,
-                            height: 60,
-                            child: const Text(
-                              "Edit Profile",
-                              style:
-                                  TextStyle(fontSize: 22, color: Colors.white),
-                            ),
+                            innerText: "Edit Profile",
                           ),
                         ),
                       ],

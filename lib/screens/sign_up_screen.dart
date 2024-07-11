@@ -36,7 +36,7 @@ class SignUpScreen extends StatelessWidget {
                     const PageHeader(),
                     const PageHeading(title: 'Sign-up'),
                     //! Image
-                    const PickImageWidget(),
+                     const PickImageWidget(),
                     const SizedBox(height: 16),
                     //! Name
                     CustomInputField(

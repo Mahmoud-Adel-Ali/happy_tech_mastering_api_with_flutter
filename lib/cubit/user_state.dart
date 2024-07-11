@@ -38,3 +38,15 @@ class GetUserProfileDataSuccess extends UserState {
   final UserModel userModel;
   GetUserProfileDataSuccess({required this.userModel});
 }
+
+class UpdateLoading extends UserState {}
+
+class UpdateSuccess extends UserState {
+  final String message;
+  UpdateSuccess({required this.message});
+}
+
+class UpdateFailure extends UserState {
+  final String message;
+  UpdateFailure({required this.message});
+}
