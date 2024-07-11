@@ -26,21 +26,29 @@ void handelDioException(DioException e) {
     case DioExceptionType.badResponse:
       switch (e.response?.statusCode) {
         case 400: // bad request
-          throw ServerException(errorModel: ErrorModel.fromJson(e.response!.data));
+          throw ServerException(
+              errorModel: ErrorModel.fromJson(e.response!.data));
         case 401: // unauthorized
-          throw ServerException(errorModel: ErrorModel.fromJson(e.response!.data));
+          throw ServerException(
+              errorModel: ErrorModel.fromJson(e.response!.data));
         case 403: // forbidden
-          throw ServerException(errorModel: ErrorModel.fromJson(e.response!.data));
+          throw ServerException(
+              errorModel: ErrorModel.fromJson(e.response!.data));
         case 404: // not found
-          throw ServerException(errorModel: ErrorModel.fromJson(e.response!.data));
+          throw ServerException(
+              errorModel: ErrorModel.fromJson(e.response!.data));
         case 409: // cofficient
-          throw ServerException(errorModel: ErrorModel.fromJson(e.response!.data));
+          throw ServerException(
+              errorModel: ErrorModel.fromJson(e.response!.data));
         case 422: // unprocessable
-          throw ServerException(errorModel: ErrorModel.fromJson(e.response!.data));
-        case 500: 
-          throw ServerException(errorModel: ErrorModel.fromJson(e.response!.data));
+          throw ServerException(
+              errorModel: ErrorModel.fromJson(e.response!.data));
+        case 500:
+          throw ServerException(
+              errorModel: ErrorModel.fromJson(e.response!.data));
         case 504: // server exception
-          throw ServerException(errorModel: ErrorModel.fromJson(e.response!.data));
+          throw ServerException(
+              errorModel: ErrorModel.fromJson(e.response!.data));
       }
   }
 }

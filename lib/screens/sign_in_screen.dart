@@ -10,6 +10,8 @@ import 'package:happy_tech_mastering_api_with_flutter/widgets/page_header.dart';
 import 'package:happy_tech_mastering_api_with_flutter/widgets/page_heading.dart';
 import 'package:happy_tech_mastering_api_with_flutter/widgets/show_snack_bar.dart';
 
+import 'profile_screen.dart';
+
 class SignInScreen extends StatelessWidget {
   const SignInScreen({Key? key}) : super(key: key);
 
@@ -28,6 +30,13 @@ class SignInScreen extends StatelessWidget {
                   showSnackBar(context, message: state.message);
                 } else if (state is SignInSuccess) {
                   showSnackBar(context, message: 'success');
+                  context.read<UserCubit>().getUserProfileData();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ProfileScreen(),
+                    ),
+                  );
                 }
               },
               builder: (context, state) {
@@ -71,13 +80,14 @@ class SignInScreen extends StatelessWidget {
                                 : CustomFormButton(
                                     innerText: 'Sign In',
                                     onPressed: () {
-                                      // Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) => const ProfileScreen(),
-                                      //   ),
-                                      // );
-                                      context.read<UserCubit>().signIn();
+                                      //! Validate the form
+                                      if (context
+                                          .read<UserCubit>()
+                                          .signInFormKey
+                                          .currentState!
+                                          .validate()) {
+                                        context.read<UserCubit>().signIn();
+                                      }
                                     },
                                   ),
                             const SizedBox(height: 18),

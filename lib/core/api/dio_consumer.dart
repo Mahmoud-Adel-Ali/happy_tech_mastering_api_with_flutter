@@ -21,7 +21,7 @@ class DioConsumer extends ApiConsumer {
   }
   @override
   Future<dynamic> delete(
-      String path, {
+    String path, {
     dynamic data,
     Map<String, String>? queryParameters,
     isFormData = false,
@@ -40,7 +40,7 @@ class DioConsumer extends ApiConsumer {
 
   @override
   Future<dynamic> get(
-      String path, {
+    String path, {
     dynamic data,
     Map<String, String>? queryParameters,
     isFormData = false,
@@ -59,7 +59,7 @@ class DioConsumer extends ApiConsumer {
 
   @override
   Future<dynamic> patch(
-      String path, {
+    String path, {
     dynamic data,
     Map<String, String>? queryParameters,
     isFormData = false,

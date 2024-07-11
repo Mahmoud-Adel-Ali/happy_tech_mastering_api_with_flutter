@@ -89,8 +89,10 @@ class SignUpScreen extends StatelessWidget {
                             onPressed: () {
                               //! Validate the form
                               if (context
-                                 .read<UserCubit>()
-                                 .signUpFormKey.currentState!.validate()) {
+                                  .read<UserCubit>()
+                                  .signUpFormKey
+                                  .currentState!
+                                  .validate()) {
                                 context.read<UserCubit>().signUp();
                               }
                             },

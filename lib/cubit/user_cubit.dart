@@ -8,6 +8,7 @@ import 'package:happy_tech_mastering_api_with_flutter/core/error/exception.dart'
 import 'package:happy_tech_mastering_api_with_flutter/core/functions/upload_image_to_api.dart';
 import 'package:happy_tech_mastering_api_with_flutter/core/models/sign_in_model.dart';
 import 'package:happy_tech_mastering_api_with_flutter/core/models/sign_up_model.dart';
+import 'package:happy_tech_mastering_api_with_flutter/core/models/user_model.dart';
 import 'package:happy_tech_mastering_api_with_flutter/cubit/user_state.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -35,6 +36,20 @@ class UserCubit extends Cubit<UserState> {
   TextEditingController signUpPassword = TextEditingController();
   //Sign up confirm password
   TextEditingController confirmPassword = TextEditingController();
+
+  getUserProfileData() async {
+    try {
+      emit(GetUserProfileDataLoading());
+      final response = await api.get(
+        EndPoints.getUserDataEndPoint(CacheHelper().getString(ApiKeys.id)!),
+      );
+      // print(response.toString());
+      final userModel = UserModel.fromJson(response);
+      emit(GetUserProfileDataSuccess(userModel: userModel));
+    } on ServerException catch (e) {
+      emit(GetUserProfileDataFailure(message: e.errorModel.errorMessage));
+    }
+  }
 
   upLoadProfilPicture(XFile image) {
     profilePic = image;
