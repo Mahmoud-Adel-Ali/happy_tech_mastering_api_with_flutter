@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:happy_tech_mastering_api_with_flutter/cubit/user_cubit.dart';
 import 'package:happy_tech_mastering_api_with_flutter/cubit/user_state.dart';
+import 'package:happy_tech_mastering_api_with_flutter/screens/update_profile_screen.dart';
 import 'package:happy_tech_mastering_api_with_flutter/widgets/show_snack_bar.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -30,36 +31,65 @@ class ProfileScreen extends StatelessWidget {
                         //! Profile Picture
                         CircleAvatar(
                           radius: 80,
-                          backgroundImage: NetworkImage(state.userModel.profilePic),
+                          backgroundImage:
+                              NetworkImage(state.userModel.profilePic),
                         ),
                         const SizedBox(height: 16),
                         //! Name
-                         ListTile(
+                        ListTile(
                           title: Text("Name : ${state.userModel.name}"),
                           leading: const Icon(Icons.person),
                         ),
                         const SizedBox(height: 16),
 
                         //! Email
-                         ListTile(
+                        ListTile(
                           title: Text("Email : ${state.userModel.email}"),
                           leading: const Icon(Icons.email),
                         ),
                         const SizedBox(height: 16),
 
                         //! Phone number
-                         ListTile(
-                          title: Text("phone number : ${state.userModel.phone}"),
+                        ListTile(
+                          title:
+                              Text("phone number : ${state.userModel.phone}"),
                           leading: const Icon(Icons.phone),
                         ),
                         const SizedBox(height: 16),
 
                         //! Address
-                         ListTile(
-                          title: Text("Address : ${state.userModel.address['type']}"),
+                        ListTile(
+                          title: Text(
+                              "Address : ${state.userModel.address['type']}"),
                           leading: const Icon(Icons.location_city),
                         ),
-                        const SizedBox(height: 16),
+                        const Expanded(child: SizedBox(height: 100)),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 28.0),
+                          child: MaterialButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const UpdateProfileScreen()));
+                            },
+                            shape: const StadiumBorder(
+                              side: BorderSide(
+                                color: Colors.black,
+                                width: 2.0,
+                                style: BorderStyle.solid,
+                              ),
+                            ),
+                            color: Colors.green,
+                            height: 60,
+                            child: const Text(
+                              "Edit Profile",
+                              style:
+                                  TextStyle(fontSize: 22, color: Colors.white),
+                            ),
+                          ),
+                        ),
                       ],
                     )
                   : Container();
