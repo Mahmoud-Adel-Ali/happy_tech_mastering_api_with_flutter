@@ -45,7 +45,6 @@ class UserCubit extends Cubit<UserState> {
   //update email
   TextEditingController? updateEmail = TextEditingController();
 
-
   getUserProfileData() async {
     try {
       emit(GetUserProfileDataLoading());
@@ -64,7 +63,7 @@ class UserCubit extends Cubit<UserState> {
     profilePic = image;
     emit(UpLoadProfilePicture());
   }
-  
+
   //Sign up
   signUp() async {
     try {
@@ -77,12 +76,8 @@ class UserCubit extends Cubit<UserState> {
           ApiKeys.phone: signUpPhoneNumber.text,
           ApiKeys.email: signUpEmail.text,
           ApiKeys.password: signUpPassword.text,
-          ApiKeys.confirmPassword: confirmPassword,
-          ApiKeys.location: {
-            "name": "methalfa",
-            "address": "meet halfa",
-            "coordinates": [30.1572709, 31.224779]
-          },
+          ApiKeys.confirmPassword: confirmPassword.text,
+          ApiKeys.location: '{"name":"methalfa","address":"meet halfa","coordinates":[30.1572709,31.224779]}',
           ApiKeys.profilePic: await uploadImageToApi(profilePic!),
         },
       );
@@ -91,6 +86,7 @@ class UserCubit extends Cubit<UserState> {
     } on ServerException catch (e) {
       emit(SignUpFailure(message: e.errorModel.errorMessage));
     }
+    
   }
 
   SignInModel? user;
@@ -125,9 +121,8 @@ class UserCubit extends Cubit<UserState> {
         isFormData: true,
         data: {
           ApiKeys.name: updateName != null ? updateName!.text : user.name,
-          ApiKeys.phone: updatePhoneNumber != null
-              ? updatePhoneNumber!.text
-              : user.phone,
+          ApiKeys.phone:
+              updatePhoneNumber != null ? updatePhoneNumber!.text : user.phone,
           ApiKeys.profilePic: profilePic != null
               ? await uploadImageToApi(profilePic!)
               : user.profilePic,

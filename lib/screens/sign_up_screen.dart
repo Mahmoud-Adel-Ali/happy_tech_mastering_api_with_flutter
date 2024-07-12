@@ -36,7 +36,7 @@ class SignUpScreen extends StatelessWidget {
                     const PageHeader(),
                     const PageHeading(title: 'Sign-up'),
                     //! Image
-                     const PickImageWidget(),
+                    const PickImageWidget(),
                     const SizedBox(height: 16),
                     //! Name
                     CustomInputField(
@@ -87,8 +87,19 @@ class SignUpScreen extends StatelessWidget {
                         : CustomFormButton(
                             innerText: 'Signup',
                             onPressed: () {
+                              if (context.read<UserCubit>().signUpPassword.text !=
+                                  context.read<UserCubit>().confirmPassword.text) {
+                                showSnackBar(context,
+                                    message:
+                                        'your password not equal confirmPassword');
+                              }
+                              else if (context.read<UserCubit>().profilePic ==null){
+                                showSnackBar(context,
+                                    message:
+                                        'Please upload your profile picture');
+                              }
                               //! Validate the form
-                              if (context
+                              else if (context
                                   .read<UserCubit>()
                                   .signUpFormKey
                                   .currentState!

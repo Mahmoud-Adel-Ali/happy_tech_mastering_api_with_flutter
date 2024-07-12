@@ -4,14 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:happy_tech_mastering_api_with_flutter/cubit/user_cubit.dart';
 import 'package:happy_tech_mastering_api_with_flutter/cubit/user_state.dart';
-import 'package:happy_tech_mastering_api_with_flutter/widgets/show_snack_bar.dart';
-import 'package:image_picker/image_picker.dart';
 
-class PickImageWidget extends StatelessWidget {
+import '../core/functions/get_image.dart';
+
+class PickImageWidget extends StatefulWidget {
   const PickImageWidget({
     super.key,
   });
 
+  @override
+  State<PickImageWidget> createState() => _PickImageWidgetState();
+}
+
+class _PickImageWidgetState extends State<PickImageWidget> {
+  bool isClick = false;
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<UserCubit, UserState>(
@@ -26,42 +32,37 @@ class PickImageWidget extends StatelessWidget {
                       File(context.read<UserCubit>().profilePic!.path)),
                   child: Stack(
                     children: [
-                      Positioned(
-                        bottom: 5,
-                        right: 5,
-                        child: GestureDetector(
-                          onTap: () async {
-                            await ImagePicker()
-                                .pickImage(source: ImageSource.gallery)
-                                .then(
-                              (value) {
-                                if (value == null) {
-                                  return showSnackBar(context,
-                                      message: 'un selected image');
-                                } else {
-                                  context
-                                      .read<UserCubit>()
-                                      .upLoadProfilPicture(value);
-                                }
-                              },
-                            );
-                          },
-                          child: Container(
-                            height: 35,
-                            width: 35,
-                            decoration: BoxDecoration(
-                              color: Colors.blue.shade400,
-                              border: Border.all(color: Colors.white, width: 3),
-                              borderRadius: BorderRadius.circular(25),
+                      isClick
+                          ? const SizedBox()
+                          : Positioned(
+                              bottom: 5,
+                              right: 5,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  isClick = true;
+                                  setState(() {});
+                                  await getImage(
+                                      context: context, isClick: isClick);
+                                  isClick = false;
+                                  setState(() {});
+                                },
+                                child: Container(
+                                  height: 35,
+                                  width: 35,
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue.shade400,
+                                    border: Border.all(
+                                        color: Colors.white, width: 3),
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                  child: const Icon(
+                                    Icons.camera_alt_sharp,
+                                    color: Colors.white,
+                                    size: 25,
+                                  ),
+                                ),
+                              ),
                             ),
-                            child: const Icon(
-                              Icons.camera_alt_sharp,
-                              color: Colors.white,
-                              size: 25,
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 )
@@ -70,37 +71,38 @@ class PickImageWidget extends StatelessWidget {
                   backgroundImage: const AssetImage("assets/images/avatar.png"),
                   child: Stack(
                     children: [
-                      Positioned(
-                        bottom: 5,
-                        right: 5,
-                        child: GestureDetector(
-                          onTap: () async {
-                            await ImagePicker()
-                                .pickImage(source: ImageSource.gallery)
-                                .then(
-                              (value) {
-                                context
-                                    .read<UserCubit>()
-                                    .upLoadProfilPicture(value!);
-                              },
-                            );
-                          },
-                          child: Container(
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.blue.shade400,
-                              border: Border.all(color: Colors.white, width: 3),
-                              borderRadius: BorderRadius.circular(25),
+                      isClick
+                          ? const SizedBox()
+                          : Positioned(
+                              bottom: 5,
+                              right: 5,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  isClick = true;
+                                  setState(() {});
+
+                                  await getImage(
+                                      context: context, isClick: isClick);
+                                  isClick = false;
+                                  setState(() {});
+                                },
+                                child: Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue.shade400,
+                                    border: Border.all(
+                                        color: Colors.white, width: 3),
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                  child: const Icon(
+                                    Icons.camera_alt_sharp,
+                                    color: Colors.white,
+                                    size: 25,
+                                  ),
+                                ),
+                              ),
                             ),
-                            child: const Icon(
-                              Icons.camera_alt_sharp,
-                              color: Colors.white,
-                              size: 25,
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
