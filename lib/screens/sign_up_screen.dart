@@ -87,13 +87,19 @@ class SignUpScreen extends StatelessWidget {
                         : CustomFormButton(
                             innerText: 'Signup',
                             onPressed: () {
-                              if (context.read<UserCubit>().signUpPassword.text !=
-                                  context.read<UserCubit>().confirmPassword.text) {
+                              if (context
+                                      .read<UserCubit>()
+                                      .signUpPassword
+                                      .text !=
+                                  context
+                                      .read<UserCubit>()
+                                      .confirmPassword
+                                      .text) {
                                 showSnackBar(context,
                                     message:
                                         'your password not equal confirmPassword');
-                              }
-                              else if (context.read<UserCubit>().profilePic ==null){
+                              } else if (context.read<UserCubit>().profilePic ==
+                                  null) {
                                 showSnackBar(context,
                                     message:
                                         'Please upload your profile picture');

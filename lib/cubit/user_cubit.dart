@@ -120,12 +120,13 @@ class UserCubit extends Cubit<UserState> {
         EndPoints.update,
         isFormData: true,
         data: {
-          ApiKeys.name: updateName != null ? updateName!.text : user.name,
+          ApiKeys.name: updateName!.text != '' ? updateName!.text : user.name,
           ApiKeys.phone:
-              updatePhoneNumber != null ? updatePhoneNumber!.text : user.phone,
+              updatePhoneNumber!.text != '' ? updatePhoneNumber!.text : user.phone,
           ApiKeys.profilePic: profilePic != null
               ? await uploadImageToApi(profilePic!)
               : user.profilePic,
+          ApiKeys.location : '{"name":"/Egypt","address":"meet halfa","coordinates":[1214451511,12541845]}',
         },
       );
       final signUpModel = SignUpModel.fromJson(response);
