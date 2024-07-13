@@ -4,4 +4,5 @@ class EndPoints {
   static const signUp = 'user/signup';
   static const update = 'user/update';
   static getUserDataEndPoint(String id) => 'user/get-user/$id';
+  static deleteUserEndPoint(String id) => 'user/delete?id=$id';
 }

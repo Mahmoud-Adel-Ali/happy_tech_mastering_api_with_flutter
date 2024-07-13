@@ -50,3 +50,13 @@ class UpdateFailure extends UserState {
   final String message;
   UpdateFailure({required this.message});
 }
+
+class DeletingLoading extends UserState{}
+class DeletingSuccess extends UserState{
+  final String message;
+  DeletingSuccess({required this.message});
+}
+class DeletingFailure extends UserState{
+  final String message;
+  DeletingFailure({required this.message});
+}

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:happy_tech_mastering_api_with_flutter/core/models/sign_in_model.dart';
 import 'package:happy_tech_mastering_api_with_flutter/core/models/user_model.dart';
 import 'package:happy_tech_mastering_api_with_flutter/core/reposetry/user_repo.dart';
 import 'package:happy_tech_mastering_api_with_flutter/cubit/user_state.dart';
@@ -69,8 +68,8 @@ class UserCubit extends Cubit<UserState> {
     );
   }
 
-  SignInModel? user;
   signIn() async {
+    emit(SignInLoading());
     final response = await userRepo.signIn(
         signInEmail: signInEmail, signInPassword: signInPassword);
     response.fold(
@@ -89,6 +88,15 @@ class UserCubit extends Cubit<UserState> {
     response.fold(
       (errorMessage) => emit(UpdateFailure(message: errorMessage)),
       (signInModel) => emit(UpdateSuccess(message: signInModel.message)),
+    );
+  }
+
+  deleteUser() async {
+    emit(DeletingLoading());
+    final response = await userRepo.deleteUser();
+    response.fold(
+      (errorMessage) => emit(DeletingFailure(message: errorMessage)),
+      (signUpModel) => emit(DeletingSuccess(message: signUpModel.message)),
     );
   }
 }
