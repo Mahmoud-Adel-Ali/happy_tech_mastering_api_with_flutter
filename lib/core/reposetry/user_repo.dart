@@ -116,7 +116,7 @@ class UserRepo {
   Future<Either<String, SignUpModel>> deleteUser() async {
     try {
       final response = await api.delete(
-          EndPoints.getUserDataEndPoint(CacheHelper().getString(ApiKeys.id)!));
+          EndPoints.deleteUserEndPoint(CacheHelper().getString(ApiKeys.id)!));
       SignUpModel signUpModel = SignUpModel.fromJson(response);
       return Right(signUpModel);
     } on ServerException catch (e) {

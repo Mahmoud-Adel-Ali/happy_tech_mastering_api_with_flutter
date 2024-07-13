@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:happy_tech_mastering_api_with_flutter/cubit/user_cubit.dart';
 import 'package:happy_tech_mastering_api_with_flutter/cubit/user_state.dart';
+import 'package:happy_tech_mastering_api_with_flutter/screens/delete_user_dialog.dart';
 import 'package:happy_tech_mastering_api_with_flutter/screens/update_profile_screen.dart';
 import 'package:happy_tech_mastering_api_with_flutter/widgets/custom_form_button.dart';
 import 'package:happy_tech_mastering_api_with_flutter/widgets/show_snack_bar.dart';
@@ -76,6 +77,16 @@ class ProfileScreen extends StatelessWidget {
                               );
                             },
                             innerText: "Edit Profile",
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 28.0),
+                          child: CustomFormButton(
+                            onPressed: () {
+                              deleteUserDialog(context);
+                            },
+                            innerText: "Delete my account",
                           ),
                         ),
                       ],
