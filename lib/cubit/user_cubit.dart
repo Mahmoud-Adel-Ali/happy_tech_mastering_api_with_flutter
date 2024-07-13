@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:happy_tech_mastering_api_with_flutter/core/api/api_consumer.dart';
-import 'package:happy_tech_mastering_api_with_flutter/core/api/api_keys.dart';
-import 'package:happy_tech_mastering_api_with_flutter/core/api/end_points.dart';
-import 'package:happy_tech_mastering_api_with_flutter/core/databases/cache/cache_helper.dart';
-import 'package:happy_tech_mastering_api_with_flutter/core/error/exception.dart';
-import 'package:happy_tech_mastering_api_with_flutter/core/functions/upload_image_to_api.dart';
 import 'package:happy_tech_mastering_api_with_flutter/core/models/sign_in_model.dart';
-import 'package:happy_tech_mastering_api_with_flutter/core/models/sign_up_model.dart';
 import 'package:happy_tech_mastering_api_with_flutter/core/models/user_model.dart';
+import 'package:happy_tech_mastering_api_with_flutter/core/reposetry/user_repo.dart';
 import 'package:happy_tech_mastering_api_with_flutter/cubit/user_state.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 
 class UserCubit extends Cubit<UserState> {
-  final ApiConsumer api;
-  UserCubit(this.api) : super(UserInitial());
+  final UserRepo userRepo;
+  UserCubit({required this.userRepo}) : super(UserInitial());
   //Sign in Form key
   GlobalKey<FormState> signInFormKey = GlobalKey();
   //Sign in email
@@ -46,17 +39,12 @@ class UserCubit extends Cubit<UserState> {
   TextEditingController? updateEmail = TextEditingController();
 
   getUserProfileData() async {
-    try {
-      emit(GetUserProfileDataLoading());
-      final response = await api.get(
-        EndPoints.getUserDataEndPoint(CacheHelper().getString(ApiKeys.id)!),
-      );
-      // print(response.toString());
-      final userModel = UserModel.fromJson(response);
-      emit(GetUserProfileDataSuccess(userModel: userModel));
-    } on ServerException catch (e) {
-      emit(GetUserProfileDataFailure(message: e.errorModel.errorMessage));
-    }
+    emit(GetUserProfileDataLoading());
+    final response = await userRepo.getUserProfileData();
+    response.fold(
+      (errorMessage) => emit(GetUserProfileDataFailure(message: errorMessage)),
+      (userModel) => emit(GetUserProfileDataSuccess(userModel: userModel)),
+    );
   }
 
   upLoadProfilPicture(XFile image) {
@@ -66,73 +54,41 @@ class UserCubit extends Cubit<UserState> {
 
   //Sign up
   signUp() async {
-    try {
-      emit(SignUpLoading());
-      final response = await api.post(
-        EndPoints.signUp,
-        isFormData: true,
-        data: {
-          ApiKeys.name: signUpName.text,
-          ApiKeys.phone: signUpPhoneNumber.text,
-          ApiKeys.email: signUpEmail.text,
-          ApiKeys.password: signUpPassword.text,
-          ApiKeys.confirmPassword: confirmPassword.text,
-          ApiKeys.location: '{"name":"methalfa","address":"meet halfa","coordinates":[30.1572709,31.224779]}',
-          ApiKeys.profilePic: await uploadImageToApi(profilePic!),
-        },
-      );
-      final signUpModel = SignUpModel.fromJson(response);
-      emit(SignUpSuccess(message: signUpModel.message));
-    } on ServerException catch (e) {
-      emit(SignUpFailure(message: e.errorModel.errorMessage));
-    }
-    
+    emit(SignUpLoading());
+    final response = await userRepo.signUp(
+      signUpName: signUpName,
+      signUpPhoneNumber: signUpPhoneNumber,
+      signUpEmail: signUpEmail,
+      signUpPassword: signUpPassword,
+      confirmPassword: confirmPassword,
+      profilePic: profilePic!,
+    );
+    response.fold(
+      (erroeMessage) => emit(SignUpFailure(message: erroeMessage)),
+      (signUpModel) => emit(SignUpSuccess(message: signUpModel.message)),
+    );
   }
 
   SignInModel? user;
   signIn() async {
-    try {
-      emit(SignInLoading());
-      final response = await api.post(
-        EndPoints.signIn,
-        data: {
-          ApiKeys.email: signInEmail.text,
-          ApiKeys.password: signInPassword.text,
-        },
-      );
-      user = SignInModel.fromJson(response);
-      final Map<String, dynamic> decodedToken = JwtDecoder.decode(user!.token);
-      // local storage
-      CacheHelper().setString(ApiKeys.id, decodedToken[ApiKeys.id]);
-      CacheHelper().setString(ApiKeys.token, user!.token);
-      //
-      emit(SignInSuccess());
-    } on ServerException catch (e) {
-      emit(SignInFailure(message: e.errorModel.errorMessage));
-    }
+    final response = await userRepo.signIn(
+        signInEmail: signInEmail, signInPassword: signInPassword);
+    response.fold(
+      (errorMessage) => emit(SignInFailure(message: errorMessage)),
+      (signInModel) => emit(SignInSuccess()),
+    );
   }
 
   //Sign up
   updateUser(UserModel user) async {
-    try {
-      emit(UpdateLoading());
-      final response = await api.patch(
-        EndPoints.update,
-        isFormData: true,
-        data: {
-          ApiKeys.name: updateName!.text != '' ? updateName!.text : user.name,
-          ApiKeys.phone:
-              updatePhoneNumber!.text != '' ? updatePhoneNumber!.text : user.phone,
-          ApiKeys.profilePic: profilePic != null
-              ? await uploadImageToApi(profilePic!)
-              : user.profilePic,
-          ApiKeys.location : '{"name":"/Egypt","address":"meet halfa","coordinates":[1214451511,12541845]}',
-        },
-      );
-      final signUpModel = SignUpModel.fromJson(response);
-      emit(UpdateSuccess(message: signUpModel.message));
-    } on ServerException catch (e) {
-      emit(UpdateFailure(message: e.errorModel.errorMessage));
-    }
+    final response = await userRepo.updateUser(
+        user: user,
+        updateName: updateName!,
+        updatePhoneNumber: updatePhoneNumber!,
+        profilePic: profilePic);
+    response.fold(
+      (errorMessage) => emit(UpdateFailure(message: errorMessage)),
+      (signInModel) => emit(UpdateSuccess(message: signInModel.message)),
+    );
   }
 }
